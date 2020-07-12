@@ -2,4 +2,4 @@
 Repository Example for Class
 
 
-ELC map, for showing how to create an HTML CSS file, and embed an ArcGIS online map. 
+Early learning center map. This example is for the UPP 465 course to show how to create an HTML CSS file, embed an ArcGIS online map, and upload and share via github.  
