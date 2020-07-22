@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>We will use JS to add content to the P element below</p>
+
+<p id="example"></p>
+
+<script>
+
+//function stored as a property in an object
+
+// var instructor = {
+// 	firstName: "Shelley",
+// 	lastName: "Hoover",
+// 	age: 31,
+// 	eyeColor: "blue",
+// 	fullName : function() {
+// 		return this.firstName + " " + this.lastName;
+// 	}
+//   };
+
+// document.getElementById("example").innerHTML = instructor.fullName();
+
+//Simple function example//
+
+function myFunction(a, b) {
+  return a + " " + b;
+}
+
+var firstName = "Shelley";
+var lastName = "Hoover";
+
+var yourFirstName = "Betty";
+var yourLastName = "Smith";
+
+var x = myFunction(firstName, lastName);
+var y = myFunction(yourFirstName, yourLastName);
+
+document.getElementById("example").innerHTML = x + " " + y;
+
+
+ /*If you are using this to write something of your 
+ own and it's not working, google "global functions" */
+
+
+
+</script>
+
+
+</body>
+</html>
