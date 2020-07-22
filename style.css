@@ -23,7 +23,8 @@
 	margin: auto;
 }
 
-.map {
+#map {
 	width: 800px;
+	height: 600px;
 	margin: auto;
 }
