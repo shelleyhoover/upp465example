@@ -16,6 +16,10 @@
 
 <!-- Copy your Leaflet Basemap Provider Link Here: -->
  <script src="js/leaflet-providers.js"></script>
+
+<!-- Add jQuery  -->
+<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
 </head>
 
 
@@ -52,59 +56,49 @@ var Stamen_TonerLite = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/to
 	ext: 'png'
 }).addTo(map);
 
-//add circle point to map and change the size/style
-var circle = L.circle([41.86, -87.66],{
-	color: 'red',
-  fillColor: '#f03',
-  fillOpacity: 0.5,
-  radius: 900,
-}).addTo(map).bindPopup("this could be a reasonable walking distance from my house");
-
-//create a variable that pulls in a new icon image
-var myIcon = L.icon({
-    iconUrl: 'babyicon.png',
-    iconSize: [30, 30],
-});
-
-//create markers & give it the icon we created
-var marker = L.marker([41.882, -87.636],{
-	icon: myIcon
-}).addTo(map).bindPopup("Daycare 1");
-
-var marker = L.marker([41.85, -87.67],{
-  icon: myIcon
-}).addTo(map).bindPopup("Daycare 2");
-
-var marker = L.marker([41.83, -87.64],{
-  icon: myIcon
-}).addTo(map).bindPopup("Daycare 3");
-
-var marker = L.marker([41.82, -87.61],{
-  icon: myIcon
-}).addTo(map).bindPopup("Daycare 4");
-
-
-//create a polygon and style
-var polygon = L.polygon([
-    [41.66, -87.11],
-    [41.73, -87.06],
-    [41.96, -87.31],
-    [41.41, -87.47],
-], {
-  color: 'purple', 
-  fillColor: 'green',
-  fillOpacity: .11,
-}).addTo(map).bindPopup("This is an unreasonably large tristate polygon");
-
-//create a line
-var line = L.polyline([
-    [41.36, -87.91],
-    [41.23, -87.16],
-    [41.46, -87.31],
-    [41.71, -87.57],
-]).addTo(map).bindPopup("What could this line mean?");
-
-
+// load Chicago ELC GeoJSON File
+$.getJSON("EarlyLearningPrograms_Chicago.geojson",function(data){
+	L.geoJSON(data, {
+		pointToLayer: function(feature, latlng) {
+			var agesColor;
+			var agesServed = feature.properties.Ages_0_3;
+			if ( agesServed == "true" ) agesColor = "blue";
+			else agesColor = "red";
+			return new L.CircleMarker(latlng, 
+				{	radius: 3,
+					fillOpacity: 1,
+					fillColor: agesColor,
+					color: 'orange',
+					weight: .5, 
+				});
+		},
+		onEachFeature: function(feature, layer){
+			layer.bindPopup("<strong>"+ feature.properties.Site_Name + "</strong><br/>" + "Ages Served :" + feature.properties.Ages_Served + "<br/>" + "Accreditation: " + feature.properties.Accreditation)
+		}
+			}).addTo(map);
+		});
+				
+$.getJSON("ChicagoHardshipIndex.geojson",function(data){
+  	L.geoJson(data, {
+		style: function(feature){
+			var conditionalColor,
+			hardship = feature.properties.HI;
+				if ( hardship > 80 ) conditionalColor = "#006837";
+				else if ( hardship > 60 ) conditionalColor = "#31a354";
+				else if ( hardship > 40 ) conditionalColor = "#78c679";
+				else if ( hardship > 20 ) conditionalColor = "#c2e699";
+				else if ( hardship > 0 ) conditionalColor = "#ffffcc";
+				else conditionalColor = "#f7f7f7";  // no data
+				return { 	color: "#999", 
+							weight: 1, 
+							fillColor: conditionalColor, 
+							fillOpacity: .6 };
+				},
+				onEachFeature: function( feature, layer ){
+				    layer.bindPopup( "Neighborhood: " + feature.properties.CA + "<br/>" + "Hardship Index Score: " + feature.properties.HI )
+				}
+  					}  ).addTo(map).bringToBack();
+				}); 
 </script>
 
 </div>
