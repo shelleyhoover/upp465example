@@ -56,11 +56,77 @@ var Stamen_TonerLite = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/to
 	ext: 'png'
 }).addTo(map);
 
-// loading GeoJSON file - Here my html and usa_adm.geojson file resides in same folder
-$.getJSON("grocerystores.geojson",function(data){
-// L.geoJson function is used to parse geojson file and load on to map
-L.geoJson(data).addTo(map);
-});
+// add geoJSON as a variable
+var pointsData = 
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "neighborhood": "uptown"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65785217285155,
+          41.96816973794843
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "neighborhood": "jefferson park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.76153564453125,
+          41.970467091533
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "neighborhood": "east garfield park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.70402908325195,
+          41.88221478702957
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#7e7e7e",
+        "marker-size": "medium",
+        "marker-symbol": "",
+        "neighborhood": "bridgeport"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6515007019043,
+          41.83810680660847
+        ]
+      }
+    }
+  ]
+}
 
 
 </script>
