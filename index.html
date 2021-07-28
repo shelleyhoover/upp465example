@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>UPP 465</title>
+<link rel="stylesheet" href="style.css"> 
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400&display=swap" rel="stylesheet">
+
+<!-- Copy your leaflet link here:  -->
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+ <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+
+<!-- Copy your Leaflet Basemap Provider Link Here: -->
+ <script src="js/leaflet-providers.js"></script>
+
+<!-- Add jQuery  -->
+<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
+</head>
+
+
+<body>
+
+<div class = "intro">
+<h1>Chicago Early Learning Centers</h1>
+<h3>Exploring access to ELC's in Chicago communities with high birth rates</h3>
+
+
+</div>
+
+<!--explains the problem of access to childcare-->
+<div class = "childcare">
+	<p> Of the 700 ELC's in the City of Chicago, only 150 of them serve children under the age of 3.  Limited access to care for newborns puts a burden on parents. </p>
+	<p> Learn more about early learning centers <a href="https://www.chicago.gov/city/en/sites/chicagoearlylearning/home.html">here</a></p> 
+</div>
+
+
+<div id = "map"><!-- Using Leaflet below, we will put a map in this div --></div>
+
+
+<script> 
+
+// initialize your map here 
+var map = L.map('map').setView([41.86, -87.66], 10);
+
+// add a base layer 
+var Stamen_TonerLite = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 20,
+	ext: 'png'
+}).addTo(map);
+
+
+$.getJSON("ChicagoHardshipIndex.geojson",function(data){
+  	L.geoJson(data, {
+		style: function(feature){
+			var conditionalColor,
+			density = feature.properties.HI;
+				if ( density > 80 ) conditionalColor = "#006837";
+				else if ( density > 60 ) conditionalColor = "#31a354";
+				else if ( density > 40 ) conditionalColor = "#78c679";
+				else if ( density > 20 ) conditionalColor = "#c2e699";
+				else if ( density > 0 ) conditionalColor = "#ffffcc";
+				else conditionalColor = "#f7f7f7";  // no data
+				return { color: "#999", weight: 1, fillColor: conditionalColor, fillOpacity: .6 };
+				},
+				onEachFeature: function( feature, layer ){
+				    layer.bindPopup( "Neighborhood: " + feature.properties.CA + "<br/>" + "Hardship Index Score: " + feature.properties.HI )
+				}
+  					}  ).addTo(map).bringToBack();
+				}); 
+
+
+// load Chicago ELC GeoJSON File
+$.getJSON("EarlyLearningPrograms_Chicago.geojson",function(data){
+	L.geoJSON(data, {
+		pointToLayer: function(feature, latlng) {
+			return new L.CircleMarker(latlng, 
+				{	radius: 3,
+					fillOpacity: 1,
+					fillColor: 'red',
+					color: 'orange',
+					weight: .5, 
+				});
+		}, onEachFeature: function(feature, layer){
+			layer.bindPopup("<strong>"+ feature.properties.Site_Name + "</strong><br/>" + "Ages Served :" + feature.properties.Ages_Served + "<br/>" + "Accreditation " + feature.properties.Accreditation)
+		}
+	}).addTo(map);
+});
+				 
+</script>
+
+</div>
+
+</body>
+
+</html>
