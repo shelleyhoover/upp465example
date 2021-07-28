@@ -1,0 +1,30 @@
+.intro {
+	width: 500px;
+	margin: auto;
+} 
+
+.intro h1 {
+	font-family: 'Nunito', sans-serif;
+	text-align: center;
+	font-size: 20pt;
+} 
+
+.intro h3 {
+	font-family: 'Nunito', sans-serif;
+	text-align: center;
+	font-size: 14pt;
+}
+
+.childcare {
+	font-family: 'Nunito', sans-serif;
+	text-align: left;
+	font-size: 11pt;
+	width: 800px;
+	margin: auto;
+}
+
+#map {
+	width: 800px;
+	height: 600px;
+	margin: auto;
+}
