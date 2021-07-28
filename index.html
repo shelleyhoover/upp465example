@@ -73,7 +73,7 @@ $.getJSON("ChicagoHardshipIndex.geojson",function(data){
 				onEachFeature: function( feature, layer ){
 				    layer.bindPopup( "Neighborhood: " + feature.properties.CA + "<br/>" + "Hardship Index Score: " + feature.properties.HI )
 				}
-  					}  ).addTo(map);
+  					}  ).addTo(map).bringToBack();
 				}); 
 
 
