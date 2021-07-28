@@ -1,4 +1,4 @@
-Week 7 Documents
+## Week 7 Documents
 
 
 **index_dataVariable** includes an exampel of GeoJSON data included as a variable. 
