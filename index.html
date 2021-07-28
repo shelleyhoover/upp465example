@@ -56,44 +56,49 @@ var Stamen_TonerLite = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/to
 	ext: 'png'
 }).addTo(map);
 
-
+// load Chicago ELC GeoJSON File
+$.getJSON("EarlyLearningPrograms_Chicago.geojson",function(data){
+	L.geoJSON(data, {
+		pointToLayer: function(feature, latlng) {
+			var agesColor;
+			var agesServed = feature.properties.Ages_0_3;
+			if ( agesServed == "true" ) agesColor = "blue";
+			else agesColor = "red";
+			return new L.CircleMarker(latlng, 
+				{	radius: 3,
+					fillOpacity: 1,
+					fillColor: agesColor,
+					color: 'orange',
+					weight: .5, 
+				});
+		},
+		onEachFeature: function(feature, layer){
+			layer.bindPopup("<strong>"+ feature.properties.Site_Name + "</strong><br/>" + "Ages Served :" + feature.properties.Ages_Served + "<br/>" + "Accreditation: " + feature.properties.Accreditation)
+		}
+			}).addTo(map);
+		});
+				
 $.getJSON("ChicagoHardshipIndex.geojson",function(data){
   	L.geoJson(data, {
 		style: function(feature){
 			var conditionalColor,
-			density = feature.properties.HI;
-				if ( density > 80 ) conditionalColor = "#006837";
-				else if ( density > 60 ) conditionalColor = "#31a354";
-				else if ( density > 40 ) conditionalColor = "#78c679";
-				else if ( density > 20 ) conditionalColor = "#c2e699";
-				else if ( density > 0 ) conditionalColor = "#ffffcc";
+			hardship = feature.properties.HI;
+				if ( hardship > 80 ) conditionalColor = "#006837";
+				else if ( hardship > 60 ) conditionalColor = "#31a354";
+				else if ( hardship > 40 ) conditionalColor = "#78c679";
+				else if ( hardship > 20 ) conditionalColor = "#c2e699";
+				else if ( hardship > 0 ) conditionalColor = "#ffffcc";
 				else conditionalColor = "#f7f7f7";  // no data
-				return { color: "#999", weight: 1, fillColor: conditionalColor, fillOpacity: .6 };
+				return { 	color: "#999", 
+							weight: 1, 
+							fillColor: conditionalColor, 
+							fillOpacity: .6 };
 				},
 				onEachFeature: function( feature, layer ){
 				    layer.bindPopup( "Neighborhood: " + feature.properties.CA + "<br/>" + "Hardship Index Score: " + feature.properties.HI )
 				}
   					}  ).addTo(map).bringToBack();
 				}); 
-
-
-// load Chicago ELC GeoJSON File
-$.getJSON("EarlyLearningPrograms_Chicago.geojson",function(data){
-	L.geoJSON(data, {
-		pointToLayer: function(feature, latlng) {
-			return new L.CircleMarker(latlng, 
-				{	radius: 3,
-					fillOpacity: 1,
-					fillColor: 'red',
-					color: 'orange',
-					weight: .5, 
-				});
-		}, onEachFeature: function(feature, layer){
-			layer.bindPopup("<strong>"+ feature.properties.Site_Name + "</strong><br/>" + "Ages Served :" + feature.properties.Ages_Served + "<br/>" + "Accreditation " + feature.properties.Accreditation)
-		}
-	}).addTo(map);
-});
-				 
 </script>
 
 </div>
