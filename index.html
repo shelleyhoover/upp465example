@@ -81,7 +81,7 @@ $.getJSON("EarlyLearningPrograms_Chicago.geojson",function(data){
 $.getJSON("ChicagoHardshipIndex.geojson",function(data){
   	L.geoJson(data, {
 		style: function(feature){
-			var conditionalColor,
+			var conditionalColor;
 			var hardship = feature.properties.HI;
 				if ( hardship > 80 ) conditionalColor = "#006837";
 				else if ( hardship > 60 ) conditionalColor = "#31a354";
