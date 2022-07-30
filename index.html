@@ -5,6 +5,21 @@
 <title>UPP 465</title>
 <link rel="stylesheet" href="style.css"> 
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;400&display=swap" rel="stylesheet">
+
+<!-- Copy your leaflet link here:  -->
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+ <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+
+<!-- Copy your Leaflet Basemap Provider Link Here: -->
+ <script src="js/leaflet-providers.js"></script>
+
+<!-- Add jQuery  -->
+<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
 </head>
 
 
@@ -24,10 +39,67 @@
 </div>
 
 
-<div class = "map">
-<!-- We will put our maps here. for homework 3, copy & paste your AGOL map into here. -->
-<!-- Use Ctrl-backslash to comment out the embedded map below to help this load in your web browser more quickly! -->
-<style>.embed-container {position: relative; padding-bottom: 80%; height: 0; max-width: 100%;} .embed-container iframe, .embed-container object, .embed-container iframe{position: absolute; top: 0; left: 0; width: 100%; height: 100%;} small{position: absolute; z-index: 40; bottom: 0; margin-bottom: -15px;}</style><div class="embed-container"><iframe width="500" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" title="Early Learning Centers Compared to Neighborhood Birth Rates" src="//univofillinois.maps.arcgis.com/apps/Embed/index.html?webmap=ef8026ec7d5443fc98b2be7468f133fc&extent=-88.203,41.607,-87.1202,42.0649&zoom=true&previewImage=false&scale=true&disable_scroll=true&theme=light"></iframe></div>
+<div id = "map"><!-- Using Leaflet below, we will put a map in this div --></div>
+
+
+<script> 
+
+// initialize your map here 
+var map = L.map('map').setView([41.86, -87.66], 10);
+
+// add a base layer 
+var Stamen_TonerLite = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 20,
+	ext: 'png'
+}).addTo(map);
+
+// load Chicago ELC GeoJSON File
+$.getJSON("EarlyLearningPrograms_Chicago.geojson",function(data){
+	L.geoJSON(data, {
+		pointToLayer: function(feature, latlng) {
+			var agesColor;
+			var agesServed = feature.properties.Ages_0_3;
+			if ( agesServed == "true" ) agesColor = "blue";
+			else agesColor = "red";
+			return new L.CircleMarker(latlng, 
+				{	radius: 3,
+					fillOpacity: 1,
+					fillColor: agesColor,
+					color: 'orange',
+					weight: .5, 
+				});
+		},
+		onEachFeature: function(feature, layer){
+			layer.bindPopup("<strong>"+ feature.properties.Site_Name + "</strong><br/>" + "Ages Served :" + feature.properties.Ages_Served + "<br/>" + "Accreditation: " + feature.properties.Accreditation)
+		}
+			}).addTo(map);
+		});
+				
+$.getJSON("ChicagoHardshipIndex.geojson",function(data){
+  	L.geoJson(data, {
+		style: function(feature){
+			var conditionalColor,
+			hardship = feature.properties.HI;
+				if ( hardship > 80 ) conditionalColor = "#006837";
+				else if ( hardship > 60 ) conditionalColor = "#31a354";
+				else if ( hardship > 40 ) conditionalColor = "#78c679";
+				else if ( hardship > 20 ) conditionalColor = "#c2e699";
+				else if ( hardship > 0 ) conditionalColor = "#ffffcc";
+				else conditionalColor = "#f7f7f7";  // no data
+				return { 	color: "#999", 
+							weight: 1, 
+							fillColor: conditionalColor, 
+							fillOpacity: .6 };
+				},
+				onEachFeature: function( feature, layer ){
+				    layer.bindPopup( "Neighborhood: " + feature.properties.CA + "<br/>" + "Hardship Index Score: " + feature.properties.HI )
+				}
+  					}  ).addTo(map).bringToBack();
+				}); 
+</script>
 
 </div>
 
